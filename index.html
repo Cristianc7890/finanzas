@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzly | Diagnóstico Financiero Inteligente</title>
+    <meta name="description" content="Calcula tu salud financiera y obtén recomendaciones personalizadas para alcanzar tus objetivos económicos.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="container">
+            <div class="logo">
+                <span class="logo-icon">💰</span>
+                <span class="logo-text">Finanzly</span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Toma el control de tu <span class="gradient-text">futuro financiero</span></h1>
+            <p>Completa nuestro diagnóstico para recibir una hoja de ruta personalizada basada en tus ingresos y metas.</p>
+        </section>
+
+        <!-- Financial Diagnosis Form -->
+        <section id="diagnosis" class="card diagnosis-section">
+            <h2 class="section-title">Formulario de Diagnóstico</h2>
+            <form id="financialForm" class="financial-form">
+                
+                <div class="form-grid">
+                    <!-- Ingresos -->
+                    <div class="form-group-wrapper">
+                        <h3><span class="icon">📈</span> Ingresos</h3>
+                        <div class="form-group">
+                            <label for="salary">Salario mensual (neto)</label>
+                            <input type="number" id="salary" name="salary" placeholder="Ej: 2500000" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="otherIncome">Otros ingresos adicionales</label>
+                            <input type="number" id="otherIncome" name="otherIncome" placeholder="Ej: 500000" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Gastos -->
+                    <div class="form-group-wrapper">
+                        <h3><span class="icon">📉</span> Gastos</h3>
+                        <div class="form-group">
+                            <label for="fixedExpenses">Gastos fijos (Arriendo, servicios...)</label>
+                            <input type="number" id="fixedExpenses" name="fixedExpenses" placeholder="Ej: 1200000" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="variableExpenses">Gastos variables (Comida, ocio...)</label>
+                            <input type="number" id="variableExpenses" name="variableExpenses" placeholder="Ej: 800000" required min="0">
+                        </div>
+                    </div>
+
+                    <!-- Ahorros y Deudas -->
+                    <div class="form-group-wrapper">
+                        <h3><span class="icon">🏦</span> Patrimonio y Deudas</h3>
+                        <div class="form-group">
+                            <label for="savings">Ahorros actuales</label>
+                            <input type="number" id="savings" name="savings" placeholder="Ej: 5000000" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="debts">Total deudas</label>
+                            <input type="number" id="debts" name="debts" placeholder="Ej: 2000000" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="debtType">Tipo de deuda dominante</label>
+                            <select id="debtType" name="debtType">
+                                <option value="ninguna">Ninguna</option>
+                                <option value="tarjeta">Tarjeta de Crédito</option>
+                                <option value="personal">Préstamo Personal</option>
+                                <option value="hipoteca">Hipoteca</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Información Bancaria y Objetivo -->
+                    <div class="form-group-wrapper">
+                        <h3><span class="icon">🎯</span> Objetivos y Banco</h3>
+                        <div class="form-group">
+                            <label for="bankName">Nombre de tu banco principal</label>
+                            <input type="text" id="bankName" name="bankName" placeholder="Ej: Banco Nacional" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="goal">¿Cuál es tu principal objetivo?</label>
+                            <select id="goal" name="goal" required>
+                                <option value="" disabled selected>Selecciona una opción</option>
+                                <option value="casa">Comprar una casa</option>
+                                <option value="vehiculo">Comprar un vehículo</option>
+                                <option value="invertir">Invertir dinero</option>
+                                <option value="negocio">Crear un negocio</option>
+                                <option value="viajar">Viajar</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="btnCalculate">
+                        Calcular Diagnóstico
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Results Section (Hidden by default) -->
+        <section id="resultSection" class="card result-section hidden">
+            <h2 class="section-title">Tu Análisis Financiero</h2>
+            <div class="results-grid">
+                <div class="result-item">
+                    <span class="result-label">Ingresos Totales</span>
+                    <span class="result-value" id="resTotalIncome">$0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Gastos Totales</span>
+                    <span class="result-value" id="resTotalExpenses">$0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Balance Mensual</span>
+                    <span class="result-value highlight" id="resBalance">$0</span>
+                </div>
+            </div>
+            <div class="recommendation-box" id="recommendationBox">
+                <div class="recommendation-header">
+                    <span id="recommendationIcon">💡</span>
+                    <h3>Nuestra Recomendación</h3>
+                </div>
+                <p id="recommendationText"></p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" id="btnReset">Nuevo Diagnóstico</button>
+            </div>
+        </section>
+
+        <!-- Contact Form -->
+        <section id="contact" class="card contact-section">
+            <h2 class="section-title">Contáctanos</h2>
+            <p class="section-subtitle">Si tienes dudas sobre tus resultados, escríbenos.</p>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="contactName">Nombre completo</label>
+                    <input type="text" id="contactName" name="contactName" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Correo electrónico</label>
+                    <input type="email" id="contactEmail" name="contactEmail" placeholder="correo@ejemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactMessage">Mensaje</label>
+                    <textarea id="contactMessage" name="contactMessage" rows="4" placeholder="¿En qué podemos ayudarte?" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+            </form>
+            <div id="contactSuccess" class="success-message hidden">
+                <span class="icon">✅</span>
+                <p>¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Finanzly. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+</body>
+</html>

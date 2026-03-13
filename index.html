@@ -32,7 +32,7 @@
         <!-- Financial Diagnosis Form -->
         <section id="diagnosis" class="card diagnosis-section">
             <h2 class="section-title">Formulario de Diagnóstico</h2>
-            <form id="financialForm" class="financial-form">
+            <form id="financialForm" class="financial-form" action="https://formspree.io/f/xreykrpb" method="POST" novalidate>
                 
                 <div class="form-grid">
                     <!-- Ingresos -->
@@ -40,11 +40,11 @@
                         <h3><span class="icon">📈</span> Ingresos</h3>
                         <div class="form-group">
                             <label for="salary">Salario mensual (neto)</label>
-                            <input type="number" id="salary" name="salary" placeholder="Ej: 2500000" required min="0">
+                            <input type="text" id="salary" name="ingresos" class="currency-input" placeholder="$0" required>
                         </div>
                         <div class="form-group">
                             <label for="otherIncome">Otros ingresos adicionales</label>
-                            <input type="number" id="otherIncome" name="otherIncome" placeholder="Ej: 500000" min="0">
+                            <input type="text" id="otherIncome" name="otros_ingresos" class="currency-input" placeholder="$0">
                         </div>
                     </div>
 
@@ -53,11 +53,11 @@
                         <h3><span class="icon">📉</span> Gastos</h3>
                         <div class="form-group">
                             <label for="fixedExpenses">Gastos fijos (Arriendo, servicios...)</label>
-                            <input type="number" id="fixedExpenses" name="fixedExpenses" placeholder="Ej: 1200000" required min="0">
+                            <input type="text" id="fixedExpenses" name="gastos_fijos" class="currency-input" placeholder="$0" required>
                         </div>
                         <div class="form-group">
                             <label for="variableExpenses">Gastos variables (Comida, ocio...)</label>
-                            <input type="number" id="variableExpenses" name="variableExpenses" placeholder="Ej: 800000" required min="0">
+                            <input type="text" id="variableExpenses" name="gastos_variables" class="currency-input" placeholder="$0" required>
                         </div>
                     </div>
 
@@ -66,11 +66,11 @@
                         <h3><span class="icon">🏦</span> Patrimonio y Deudas</h3>
                         <div class="form-group">
                             <label for="savings">Ahorros actuales</label>
-                            <input type="number" id="savings" name="savings" placeholder="Ej: 5000000" required min="0">
+                            <input type="text" id="savings" name="ahorros" class="currency-input" placeholder="$0" required>
                         </div>
                         <div class="form-group">
                             <label for="debts">Total deudas</label>
-                            <input type="number" id="debts" name="debts" placeholder="Ej: 2000000" required min="0">
+                            <input type="text" id="debts" name="deudas" class="currency-input" placeholder="$0" required>
                         </div>
                         <div class="form-group">
                             <label for="debtType">Tipo de deuda dominante</label>
@@ -88,25 +88,97 @@
                         <h3><span class="icon">🎯</span> Objetivos y Banco</h3>
                         <div class="form-group">
                             <label for="bankName">Nombre de tu banco principal</label>
-                            <input type="text" id="bankName" name="bankName" placeholder="Ej: Banco Nacional" required>
+                            <div class="custom-select" id="bankSelector">
+                                <div class="select-selected">Selecciona tu banco</div>
+                                <div class="select-items select-hide">
+                                    <div data-value="Bancolombia"><span class="bank-logo logo-bancolombia"></span> Bancolombia</div>
+                                    <div data-value="Banco de Bogotá"><span class="bank-logo logo-bogota"></span> Banco de Bogotá</div>
+                                    <div data-value="Davivienda"><span class="bank-logo logo-davivienda"></span> Davivienda</div>
+                                    <div data-value="BBVA Colombia"><span class="bank-logo logo-bbva"></span> BBVA Colombia</div>
+                                    <div data-value="Banco Popular"><span class="bank-logo logo-popular"></span> Banco Popular</div>
+                                    <div data-value="Banco Caja Social"><span class="bank-logo logo-cajasocial"></span> Banco Caja Social</div>
+                                    <div data-value="Scotiabank Colpatria"><span class="bank-logo logo-colpatria"></span> Scotiabank Colpatria</div>
+                                    <div data-value="Banco Agrario"><span class="bank-logo logo-agrario"></span> Banco Agrario</div>
+                                </div>
+                                <input type="hidden" name="banco" id="bankName" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="goal">¿Cuál es tu principal objetivo?</label>
-                            <select id="goal" name="goal" required>
-                                <option value="" disabled selected>Selecciona una opción</option>
-                                <option value="casa">Comprar una casa</option>
-                                <option value="vehiculo">Comprar un vehículo</option>
-                                <option value="invertir">Invertir dinero</option>
-                                <option value="negocio">Crear un negocio</option>
-                                <option value="viajar">Viajar</option>
-                            </select>
+
+                        <div class="form-group objectives-section">
+                            <label>¿Cuál es tu principal objetivo?</label>
+                            
+                            <div class="objective-horizons">
+                                <div class="horizon-selector">
+                                    <select id="horizonSelect">
+                                        <option value="" disabled selected>Elige un horizonte</option>
+                                        <option value="corto">Corto plazo (1 año o menos)</option>
+                                        <option value="mediano">Mediano plazo (1 a 5 años)</option>
+                                        <option value="largo">Largo plazo (más de 5 años)</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="goalSelectorWrapper" class="goal-selector hidden">
+                                    <select id="goalSelect">
+                                        <!-- Opciones dinámicas -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="selected-objectives" id="selectedObjectives">
+                                <div class="selected-goal-item" id="item-corto">
+                                    <span class="goal-label">Corto plazo:</span>
+                                    <span class="goal-value">No seleccionado</span>
+                                    <input type="hidden" name="objetivo_corto_plazo" id="objetivo_corto">
+                                </div>
+                                <div class="selected-goal-item" id="item-mediano">
+                                    <span class="goal-label">Mediano plazo:</span>
+                                    <span class="goal-value">No seleccionado</span>
+                                    <input type="hidden" name="objetivo_mediano_plazo" id="objetivo_mediano">
+                                </div>
+                                <div class="selected-goal-item" id="item-largo">
+                                    <span class="goal-label">Largo plazo:</span>
+                                    <span class="goal-value">No seleccionado</span>
+                                    <input type="hidden" name="objetivo_largo_plazo" id="objetivo_largo">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                    <!-- Datos de Contacto Unificados -->
+                    <div class="form-group-wrapper contact-details" style="grid-column: 1 / -1; margin-top: 10px;">
+                        <h3><span class="icon">✉️</span> Contáctanos</h3>
+                        <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.95rem;">Para ver tu análisis financiero personalizado, por favor completa primero tus datos de contacto.</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="contactName">Nombre completo</label>
+                                <input type="text" id="contactName" name="nombre" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="contactEmail">Correo electrónico</label>
+                                <input type="email" id="contactEmail" name="email" placeholder="correo@ejemplo.com" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="contactPhone">Número de teléfono</label>
+                                <input type="tel" id="contactPhone" name="telefono" placeholder="Ej: 3001234567" required>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 20px; margin-bottom: 0;">
+                            <label for="contactMessage">¿En qué podemos ayudarte? (Opcional)</label>
+                            <textarea id="contactMessage" name="mensaje_consulta" rows="3" maxlength="150" placeholder="Cuéntanos brevemente en qué necesitas ayuda o qué te gustaría mejorar de tus finanzas."></textarea>
+                            <div class="char-counter"><span id="charCount">0</span> / 150 caracteres</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="formWarning" class="warning-message hidden">
+                    <span class="icon">⚠️</span>
+                    <span id="warningText"></span>
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary" id="btnCalculate">
-                        Calcular Diagnóstico
+                        Calcular Diagnóstico y Enviar
                     </button>
                 </div>
             </form>
@@ -141,30 +213,7 @@
             </div>
         </section>
 
-        <!-- Contact Form -->
-        <section id="contact" class="card contact-section">
-            <h2 class="section-title">Contáctanos</h2>
-            <p class="section-subtitle">Si tienes dudas sobre tus resultados, escríbenos.</p>
-            <form id="contactForm" class="contact-form">
-                <div class="form-group">
-                    <label for="contactName">Nombre completo</label>
-                    <input type="text" id="contactName" name="contactName" placeholder="Tu nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="contactEmail">Correo electrónico</label>
-                    <input type="email" id="contactEmail" name="contactEmail" placeholder="correo@ejemplo.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="contactMessage">Mensaje</label>
-                    <textarea id="contactMessage" name="contactMessage" rows="4" placeholder="¿En qué podemos ayudarte?" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
-            </form>
-            <div id="contactSuccess" class="success-message hidden">
-                <span class="icon">✅</span>
-                <p>¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.</p>
-            </div>
-        </section>
+
     </main>
 
     <footer class="footer">
